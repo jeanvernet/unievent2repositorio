@@ -5,7 +5,6 @@ React (Vite) + Node.js/Express + SQLite (better-sqlite3).
 
 ## Como rodar
 
-Pré-requisito: Node.js 18+.
 
 ```bash
 # 1) API (porta 3001)
@@ -27,7 +26,6 @@ Abra http://localhost:5173.
 - **Eventos** (`#/eventos`): busca por texto, filtro por categoria e por data, agenda agrupada por mês. Os filtros ficam na URL e podem ser compartilhados.
 - **Detalhes** (`#/eventos/:id`): data, horário, local, organização, descrição e link do evento.
 
-Acessibilidade: link para pular ao conteúdo, foco visível, contraste verificado, anúncio da quantidade de resultados para leitores de tela e respeito a "reduzir movimento".
 
 ## Testes automatizados da API
 
