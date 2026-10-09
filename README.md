@@ -47,5 +47,3 @@ npm test
 ## Atenção para quem testar
 
 - Os 6 eventos iniciais (`backend/db.js`) são **dados de exemplo**. Ainda não implementei um consumo real.
-- Quando trocar os eventos de exemplo por eventos reais, apague a frase "Os eventos exibidos nesta versão são de demonstração" no rodapé (`frontend/src/App.jsx`).
-- Adicione `.gitignore`, faça o primeiro commit e crie o repositório no GitHub (link vai na capa e na seção 5.1).
