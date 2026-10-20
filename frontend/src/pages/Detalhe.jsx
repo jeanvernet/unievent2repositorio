@@ -64,6 +64,12 @@ export default function Detalhe({ id }) {
               <dt><Icon nome="local" />Local</dt>
               <dd>{evento.local || 'A definir'}</dd>
             </div>
+            {evento.instituicao && (
+              <div className="fato">
+                <dt><Icon nome="organizador" />Instituição</dt>
+                <dd>{evento.instituicao}</dd>
+              </div>
+            )}
             {evento.organizador && (
               <div className="fato">
                 <dt><Icon nome="organizador" />Organização</dt>

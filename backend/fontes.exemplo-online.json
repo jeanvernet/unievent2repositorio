@@ -1,0 +1,14 @@
+[
+  {
+    "chave": "planilha",
+    "instituicao": "Unisenac",
+    "tipo": "csv",
+    "url": "COLE_AQUI_O_LINK_CSV_DA_PLANILHA_PUBLICADA"
+  },
+  {
+    "chave": "calendario-outra",
+    "instituicao": "Nome da outra universidade",
+    "tipo": "ics",
+    "url": "COLE_AQUI_O_LINK_.ics_DO_CALENDARIO_PUBLICO"
+  }
+]

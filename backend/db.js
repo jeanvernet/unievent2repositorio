@@ -21,17 +21,30 @@ db.exec(`
     link         TEXT,
     categoria_id INTEGER NOT NULL REFERENCES categoria(id)
   );
+  CREATE TABLE IF NOT EXISTS instituicao (
+    id   INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL UNIQUE
+  );
 `);
+
+// Migração leve: bancos criados antes do suporte a várias instituições
+// ganham as novas colunas sem perder dados.
+const colunas = db.prepare('PRAGMA table_info(evento)').all().map((c) => c.name);
+if (!colunas.includes('instituicao_id')) db.exec('ALTER TABLE evento ADD COLUMN instituicao_id INTEGER REFERENCES instituicao(id)');
+if (!colunas.includes('fonte')) db.exec('ALTER TABLE evento ADD COLUMN fonte TEXT');           // chave da fonte (fontes.json)
+if (!colunas.includes('uid_externo')) db.exec('ALTER TABLE evento ADD COLUMN uid_externo TEXT'); // identificador do evento na fonte
+db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_evento_fonte ON evento(fonte, uid_externo) WHERE fonte IS NOT NULL');
 
 // Dados de EXEMPLO para desenvolvimento e testes de usabilidade.
 // Troque por eventos reais antes de validar com o público externo.
 function seed() {
   const { total } = db.prepare('SELECT COUNT(*) AS total FROM evento').get();
   if (total > 0) return;
-
-  const cats = ['Palestra', 'Workshop', 'Curso', 'Cultural', 'Esporte'];
+  const cats = ['Palestra', 'Workshop', 'Curso', 'Cultural', 'Esporte', 'Outros'];
   const insCat = db.prepare('INSERT OR IGNORE INTO categoria (nome) VALUES (?)');
   cats.forEach((c) => insCat.run(c));
+  if (process.env.SEM_SEED === '1') return; // ambiente só com fontes reais: sem eventos de exemplo
+
   const catId = (nome) => db.prepare('SELECT id FROM categoria WHERE nome = ?').get(nome).id;
 
   const ins = db.prepare(`INSERT INTO evento

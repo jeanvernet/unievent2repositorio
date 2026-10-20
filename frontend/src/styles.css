@@ -128,6 +128,9 @@ main:focus { outline: none; }
 .campo label { display: block; margin-bottom: .35rem; font-size: .92rem; font-weight: 700; }
 .campo-entrada { display: flex; align-items: center; gap: .4rem; padding-left: .75rem; border: 1.5px solid var(--borda-campo); border-radius: 10px; background: #fff; color: var(--muted); }
 .campo-entrada:focus-within { outline: 3px solid var(--ink); outline-offset: 2px; }
+.campo-entrada select { flex: 1; min-width: 0; padding: .65rem .6rem .65rem .1rem; border: 0; background: transparent; font: inherit; color: var(--ink); }
+.campo-entrada select:focus-visible { outline: none; }
+.instituicao { font-size: .86rem; font-weight: 600; color: var(--muted); }
 .campo-entrada input { flex: 1; min-width: 0; padding: .65rem .6rem .65rem .1rem; border: 0; background: transparent; font: inherit; color: var(--ink); }
 .campo-entrada input:focus-visible { outline: none; }
 

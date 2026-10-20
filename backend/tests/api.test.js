@@ -1,3 +1,4 @@
+process.env.FONTES_PATH = '/caminho/que/nao/existe.json'; // testes não dependem do fontes.json real
 process.env.DB_PATH = ':memory:';
 const request = require('supertest');
 const app = require('../app');

@@ -1,0 +1,8 @@
+[
+  {
+    "chave": "eventos-poa",
+    "instituicao": "Porto Alegre",
+    "tipo": "csv",
+    "arquivo": "eventos.csv"
+  }
+]

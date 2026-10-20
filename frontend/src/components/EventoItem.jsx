@@ -31,6 +31,7 @@ export default function EventoItem({ evento }) {
           </p>
           <p className="evento-rodape">
             <Selo categoria={evento.categoria} />
+            {evento.instituicao && <span className="instituicao">{evento.instituicao}</span>}
             {proximidade && <span className="proximidade">{proximidade}</span>}
           </p>
         </div>

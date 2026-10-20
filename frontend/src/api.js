@@ -8,10 +8,11 @@ async function get(url) {
   return resposta.json();
 }
 
-export function listarEventos({ q, categoria, data } = {}, signal) {
+export function listarEventos({ q, categoria, instituicao, data } = {}, signal) {
   const params = new URLSearchParams();
   if (q) params.set('q', q);
   if (categoria) params.set('categoria', categoria);
+  if (instituicao) params.set('instituicao', instituicao);
   if (data) params.set('data', data);
   const texto = params.toString();
   return fetch(`/api/eventos${texto ? `?${texto}` : ''}`, { signal }).then((r) => {
@@ -22,3 +23,4 @@ export function listarEventos({ q, categoria, data } = {}, signal) {
 
 export const obterEvento = (id) => get(`/api/eventos/${id}`);
 export const listarCategorias = () => get('/api/categorias');
+export const listarInstituicoes = () => get('/api/instituicoes');

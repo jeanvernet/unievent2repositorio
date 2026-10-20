@@ -50,7 +50,7 @@ export default function App() {
       <footer className="rodape">
         <div className="container">
           <p>UniEvent é um projeto acadêmico de extensão do Centro Universitário Senac-RS.</p>
-          <p>Os eventos exibidos nesta versão são de demonstração.</p>
+          <p>Datas e locais podem mudar. Confirme sempre com o organizador do evento.</p>
         </div>
       </footer>
     </>
