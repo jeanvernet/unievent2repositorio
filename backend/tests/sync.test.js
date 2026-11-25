@@ -2,7 +2,11 @@ process.env.FONTES_PATH = '/caminho/que/nao/existe.json'; // testes não depende
 process.env.DB_PATH = ':memory:';
 const request = require('supertest');
 const app = require('../app');
-const { eventosDoCSV, eventosDoICS, normalizarData, sincronizarFonte } = require('../sync');
+const { eventosDoCSV, eventosDoICS, eventosDoTribe, eventosDoJSON, eventosDoJSONLD, normalizarData, sincronizarFonte } = require('../sync');
+const { classificar } = require('../categorizar');
+const { permitido } = require('../robots');
+
+const HOJE = '2026-01-01'; // data fixa: os testes não dependem do dia em que rodam
 
 const resposta = (texto, ok = true, status = 200) => async () => ({ ok, status, text: async () => texto });
 
@@ -56,7 +60,7 @@ describe('sincronização de várias instituições', () => {
   const fonteB = { chave: 'b', instituicao: 'Universidade B', tipo: 'ics', url: 'https://x.test/b.ics' };
 
   test('importa eventos válidos, ignora inválidos e remove demonstração', async () => {
-    const r = await sincronizarFonte(fonteA, { fetchFn: resposta(CSV) });
+    const r = await sincronizarFonte(fonteA, { fetchFn: resposta(CSV), hoje: HOJE });
     expect(r.ok).toBe(true);
     expect(r.eventos).toBe(3);
     expect(r.ignorados).toBe(1);
@@ -64,11 +68,11 @@ describe('sincronização de várias instituições', () => {
     expect(lista.every((e) => e.instituicao === 'Universidade A')).toBe(true);
     const oficina = lista.find((e) => e.titulo === 'Oficina de Git');
     expect(oficina.link).toBe(''); // link javascript: descartado
-    expect(lista.find((e) => e.titulo === 'Torneio').categoria).toBe('Outros');
+    expect(lista.find((e) => e.titulo === 'Torneio').categoria).toBe('Esporte'); // categoria desconhecida → classificada pelo título
   });
 
   test('segunda fonte convive com a primeira e o filtro por instituição funciona', async () => {
-    await sincronizarFonte(fonteB, { fetchFn: resposta(ICS) });
+    await sincronizarFonte(fonteB, { fetchFn: resposta(ICS), hoje: HOJE });
     const inst = (await request(app).get('/api/instituicoes')).body;
     expect(inst.map((i) => i.nome)).toEqual(['Universidade A', 'Universidade B']);
     const idB = inst.find((i) => i.nome === 'Universidade B').id;
@@ -79,7 +83,7 @@ describe('sincronização de várias instituições', () => {
 
   test('atualiza evento alterado e remove o que saiu da fonte', async () => {
     const novoICS = ICS.replace('Seminário de Pesquisa', 'Seminário (novo título)').replace(/BEGIN:VEVENT\nUID:abc-2[\s\S]*?END:VEVENT\n/, '');
-    await sincronizarFonte(fonteB, { fetchFn: resposta(novoICS) });
+    await sincronizarFonte(fonteB, { fetchFn: resposta(novoICS), hoje: HOJE });
     const idB = (await request(app).get('/api/instituicoes')).body.find((i) => i.nome === 'Universidade B').id;
     const lista = (await request(app).get(`/api/eventos?instituicao=${idB}`)).body;
     expect(lista.map((e) => e.titulo)).toEqual(['Seminário (novo título)']);
@@ -87,7 +91,7 @@ describe('sincronização de várias instituições', () => {
 
   test('falha numa fonte mantém os eventos antigos e não afeta as outras', async () => {
     const antes = (await request(app).get('/api/eventos')).body.length;
-    const r = await sincronizarFonte(fonteA, { fetchFn: resposta('', false, 500) });
+    const r = await sincronizarFonte(fonteA, { fetchFn: resposta('', false, 500), hoje: HOJE });
     expect(r.ok).toBe(false);
     expect((await request(app).get('/api/eventos')).body.length).toBe(antes);
     const status = (await request(app).get('/api/status')).body;
@@ -96,7 +100,7 @@ describe('sincronização de várias instituições', () => {
 
   test('CSV com coluna "instituição" distribui eventos entre instituições', async () => {
     const csv = 'título,data,instituição\nEvento X,2026-12-20,Universidade C\nEvento Y,2026-12-21,\n';
-    await sincronizarFonte({ chave: 'c', instituicao: 'Padrão D', tipo: 'csv', url: 'https://x.test/c.csv' }, { fetchFn: resposta(csv) });
+    await sincronizarFonte({ chave: 'c', instituicao: 'Padrão D', tipo: 'csv', url: 'https://x.test/c.csv' }, { fetchFn: resposta(csv), hoje: HOJE });
     const lista = (await request(app).get('/api/eventos')).body;
     expect(lista.find((e) => e.titulo === 'Evento X').instituicao).toBe('Universidade C');
     expect(lista.find((e) => e.titulo === 'Evento Y').instituicao).toBe('Padrão D');

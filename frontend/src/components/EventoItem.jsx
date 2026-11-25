@@ -14,7 +14,7 @@ export function Selo({ categoria }) {
   return <span className={`selo selo-${slug(categoria)}`}>{categoria}</span>;
 }
 
-export default function EventoItem({ evento }) {
+export default function EventoItem({ evento, motivos }) {
   const proximidade = rotuloProximidade(evento.data);
   return (
     <li>
@@ -34,6 +34,9 @@ export default function EventoItem({ evento }) {
             {evento.instituicao && <span className="instituicao">{evento.instituicao}</span>}
             {proximidade && <span className="proximidade">{proximidade}</span>}
           </p>
+          {motivos && motivos.length > 0 && (
+            <p className="evento-motivos"><strong>Por que sugerimos:</strong> {motivos.join(' · ')}</p>
+          )}
         </div>
         <span className="evento-seta"><Icon nome="seta" tamanho={22} /></span>
       </a>

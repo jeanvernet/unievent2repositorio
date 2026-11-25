@@ -1,14 +1,37 @@
 [
   {
-    "chave": "planilha",
+    "chave": "planilha-colaborativa",
     "instituicao": "Unisenac",
     "tipo": "csv",
-    "url": "COLE_AQUI_O_LINK_CSV_DA_PLANILHA_PUBLICADA"
+    "url": "COLE_AQUI_O_LINK_CSV_DA_PLANILHA_PUBLICADA",
+    "observacao": "Google Forms → planilha → Publicar na web (CSV). Organizadores enviam o evento pelo formulário."
   },
   {
-    "chave": "calendario-outra",
-    "instituicao": "Nome da outra universidade",
+    "chave": "wordpress-the-events-calendar",
+    "instituicao": "Nome da instituição",
+    "tipo": "tribe",
+    "url": "https://SEU-SITE/wp-json/tribe/events/v1/events",
+    "observacao": "Sites WordPress com o plugin The Events Calendar."
+  },
+  {
+    "chave": "calendario-ics",
+    "instituicao": "Nome da instituição",
     "tipo": "ics",
-    "url": "COLE_AQUI_O_LINK_.ics_DO_CALENDARIO_PUBLICO"
+    "url": "https://SEU-SITE/agenda.ics"
+  },
+  {
+    "chave": "pagina-com-schema-org",
+    "instituicao": "Nome da instituição",
+    "tipo": "jsonld",
+    "url": "https://SEU-SITE/eventos",
+    "observacao": "Página HTML com marcação schema.org/Event. Só é lida se o robots.txt do site permitir."
+  },
+  {
+    "chave": "api-json",
+    "instituicao": "Nome da instituição",
+    "tipo": "json",
+    "url": "https://SEU-SITE/api/eventos.json",
+    "caminho": "dados.lista",
+    "observacao": "'caminho' é opcional: onde está a lista dentro do JSON."
   }
 ]

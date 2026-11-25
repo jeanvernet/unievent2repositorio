@@ -183,3 +183,12 @@ main:focus { outline: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ---------- Para você (recomendações por interesses) ---------- */
+.pagina-texto { max-width: 62ch; margin: -.75rem 0 1.5rem; color: var(--muted); }
+.interesses { grid-template-columns: 1fr; }
+.palavra-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .75rem; }
+.palavra-form .campo { flex: 1 1 260px; }
+.palavras { margin-top: .75rem; }
+.evento-motivos { margin-top: .5rem; font-size: .9rem; color: var(--ink-2); }
+.evento-motivos strong { font-weight: 700; }

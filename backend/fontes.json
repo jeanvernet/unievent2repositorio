@@ -1,8 +1,28 @@
 [
   {
-    "chave": "eventos-poa",
+    "chave": "ufrgs-informatica",
+    "instituicao": "UFRGS — Instituto de Informática",
+    "tipo": "ics",
+    "url": "https://www.inf.ufrgs.br/site/feed/eo-events/"
+  },
+  {
+    "chave": "ufrgs-documenta",
+    "instituicao": "UFRGS — Bibliotecas (Documenta)",
+    "tipo": "tribe",
+    "url": "https://www.ufrgs.br/documenta/wp-json/tribe/events/v1/events"
+  },
+  {
+    "chave": "ufrgs-propg",
+    "instituicao": "UFRGS — Pós-Graduação",
+    "tipo": "tribe",
+    "url": "https://www.ufrgs.br/propg/wp-json/tribe/events/v1/events"
+  },
+  {
+    "chave": "agenda-curada-poa",
     "instituicao": "Porto Alegre",
     "tipo": "csv",
-    "arquivo": "eventos.csv"
+    "arquivo": "eventos.csv",
+    "ativa": true,
+    "observacao": "Contingência: eventos públicos de Porto Alegre coletados em 17/10 e 23/11/2026 (links de origem em cada linha). Só entram os que ainda vão acontecer."
   }
 ]

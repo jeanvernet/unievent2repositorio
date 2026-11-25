@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const { db, seed } = require('./db');
-const { carregarFontes, estado } = require('./sync');
+const { carregarFontes, estado, hojeISO } = require('./sync');
+const { recomendar } = require('./recomendar');
 
 // Com fontes reais configuradas, os dados de demonstração não são criados.
 if (carregarFontes().length > 0) process.env.SEM_SEED = '1';
@@ -43,6 +44,27 @@ app.get('/api/eventos', (req, res) => {
   `).all({ q: q || null, categoria, instituicao, data: data || null });
 
   res.json(eventos);
+});
+
+// GET /api/recomendacoes?categorias=1,2&instituicoes=3&palavras=git,ia&limite=10&data=AAAA-MM-DD
+// Os interesses não são guardados no servidor: valem apenas para esta consulta.
+app.get('/api/recomendacoes', (req, res) => {
+  const ids = (t) => (t || '').toString().split(',').map((x) => x.trim()).filter(Boolean);
+  const categorias = ids(req.query.categorias).map(Number);
+  const instituicoes = ids(req.query.instituicoes).map(Number);
+  const palavras = ids(req.query.palavras).map((p) => p.slice(0, 30)).slice(0, 10);
+  const limite = req.query.limite ? Number(req.query.limite) : 10;
+  const data = (req.query.data || hojeISO()).toString();
+  if ([...categorias, ...instituicoes].some(Number.isNaN)) return res.status(400).json({ erro: 'Categorias e instituições devem ser números.' });
+  if (Number.isNaN(limite) || limite < 1 || limite > 50) return res.status(400).json({ erro: 'Parâmetro "limite" deve estar entre 1 e 50.' });
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(data)) return res.status(400).json({ erro: 'Parâmetro "data" deve estar no formato AAAA-MM-DD.' });
+  if (categorias.length + instituicoes.length + palavras.length === 0) return res.status(400).json({ erro: 'Informe ao menos um interesse.' });
+  const futuros = db.prepare(`
+    SELECT e.id, e.titulo, e.descricao, e.data, e.horario, e.local, e.organizador, e.link,
+           c.id AS categoria_id, c.nome AS categoria, i.id AS instituicao_id, i.nome AS instituicao
+    FROM evento e JOIN categoria c ON c.id = e.categoria_id LEFT JOIN instituicao i ON i.id = e.instituicao_id
+    WHERE e.data >= ? ORDER BY e.data, e.horario`).all(data);
+  res.json(recomendar(futuros, { categorias, instituicoes, palavras }, data).slice(0, limite));
 });
 
 app.get('/api/eventos/:id', (req, res) => {

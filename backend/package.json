@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "jest"
+    "test": "jest",
+    "coletar": "node coletar.js"
   },
   "dependencies": {
     "better-sqlite3": "^11.0.0",
